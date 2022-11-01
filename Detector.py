@@ -3,7 +3,7 @@ import numpy as np
 
 from tensorflow.python.keras.utils.data_utils import get_file
 
-np.random.seed(123)
+np.random.seed(20)
 
 class Detector:
     def __init__(self):
@@ -65,7 +65,7 @@ class Detector:
                 classConfidence = round(100*classScores[i])
                 classIndex = classIndexes[i]
 
-                classLabelText = self.classesList[classIndex]
+                classLabelText = self.classesList[classIndex].upper()
                 classColor =  self.colorList[classIndex]
 
                 displayText = '{}: {}%'.format(classLabelText, classConfidence)
@@ -74,8 +74,25 @@ class Detector:
                 xmin, xmax, ymin, ymax = (xmin * imW, xmax * imW, ymin * imH, ymax * imH)
                 xmin, xmax, ymin, ymax = int(xmin), int(xmax), int(ymin), int(ymax)
 
+                # Draw BBox
                 cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=classColor, thickness=1)
+                # Output Text
                 cv2.putText(image, displayText, (xmin, ymin - 10), cv2.FONT_HERSHEY_PLAIN, 1, classColor, 2)
+
+
+                # 코너를 두껍게 칠해주기위한 선분
+                lineWidth = min(int((xmax - xmin) * 0.2), int((ymax - ymin) * 0.2))
+                cv2.line(image, (xmin, ymin), (xmin + lineWidth, ymin), classColor, thickness=5)
+                cv2.line(image, (xmin, ymin), (xmin, ymin + lineWidth), classColor, thickness=5)
+
+                cv2.line(image, (xmin, ymax), (xmin + lineWidth, ymax), classColor, thickness=5)
+                cv2.line(image, (xmin, ymax - lineWidth), (xmin, ymax), classColor, thickness=5)
+
+                cv2.line(image, (xmax - lineWidth, ymin), (xmax, ymin), classColor, thickness=5)
+                cv2.line(image, (xmax, ymin), (xmax, ymin + lineWidth), classColor, thickness=5)
+
+                cv2.line(image, (xmax - lineWidth, ymax), (xmax, ymax), classColor, thickness=5)
+                cv2.line(image, (xmax, ymax - lineWidth), (xmax, ymax), classColor, thickness=5)
 
         return image
 
