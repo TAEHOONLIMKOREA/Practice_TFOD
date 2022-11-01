@@ -8,6 +8,7 @@ __pycache__/
 
 # Custom Dir
 pretrained_models/
+ssd_mobilenet_v2_320x320_coco17_tpu-8.jpg
 
 # Distribution / packaging
 .Python
